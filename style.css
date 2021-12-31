@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Nobile:wght@700&display=swap');
+
+.paybox{
+    font-size: 50px;
+    color: #EEEEEE;
+    background-color: #393E46;
+    margin: auto;
+    width: 50%;
+    padding-top: 70px;
+    font-family: 'Nobile', sans-serif;
+    text-align: center;
+    width: 1000px;
+    height: 800px;
+    border-radius: 20px;
+}
+
+body{
+    background-color: #222831;
+}
+
+.center{
+    padding-top: 250px;
+}
