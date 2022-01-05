@@ -6,7 +6,7 @@
     background-color: #393E46;
     margin: auto;
     width: 50%;
-    padding-top: 70px;
+    padding-top: 30px;
     font-family: 'Nobile', sans-serif;
     text-align: center;
     width: 1000px;
@@ -19,5 +19,14 @@ body{
 }
 
 .center{
-    padding-top: 250px;
+    padding-top: 200px;
+    padding-bottom: 500px;
+}
+
+#myalgo{
+    border-radius: 50px;
+}
+
+.depositaddress{
+    font-size: 20px;
 }
