@@ -1,5 +1,9 @@
 <html>
     <title>NCoin Pay</title>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+
     <style>
         .lds-ring {
             display: inline-block;
@@ -38,8 +42,34 @@
             transform: rotate(360deg);
             }
         }
+
+        #myalgo {
+            background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%)
+        }
+        #myalgo {
+            margin-top: 30px;
+            margin-left: 300px;
+            text-align: center;
+            transition: 0.5s;
+            background-size: 200% auto;
+            border-color: none;
+            border: none;
+            color: white;            
+            border-radius: 10px;
+            width: 400px;
+            height: 50px;
+            font-size: 20px;
+            display: block;
+        }
+
+          #myalgo:hover {
+            background-position: right center; /* change the direction of the change here */
+            color: #fff;
+            text-decoration: none;
+          }
+         
+        }
     </style>
-    <link rel="stylesheet" type="text/css" href="style.css">
 </html>
 
 <?php
@@ -55,7 +85,7 @@
     {
         $productprice = json_decode(base64_decode($productpricedict["transaction"]["note"]), true)["price-in-ncoin"];
     }
-    echo('<div class="center"><div class="paybox">  <button id="myalgo" class="myalgo">1 Click with MyAlgo</button>  <p>Pay with NCoin</p> <p class="depositaddress">Send ' . $productprice . ' NCoin to ' . $merchantid . '</p>    <img id="qr" src=' . 'https://chart.googleapis.com/chart?chs=450x450&cht=qr&chl=' . 'algorand%3A%2F%2F' . $merchantid . '%3Famount%3D'. $productprice .'%26asset%3D338543684%26xnote%3Dnpay' . $npayid . '&choe=UTF-8' . '" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>  </div></div>');
+    echo('<div class="center"><div class="paybox">  <button id="myalgo" class="myalgo">Use MyAlgo</button>  <p>Pay with NCoin</p> <p style="font-size: 20px; font-family: Arial, Helvetica, sans-serif; padding-bottom: 35px;">Send ' . $productprice . ' NCoin to ' . $merchantid . '</p>    <img id="qr" src="https://chart.googleapis.com/chart?chs=450x450&cht=qr&chl=' . 'algorand%3A%2F%2F' . $merchantid . '%3Famount%3D' . $productprice*100000 . '%26asset%3D338543684%26xnote%3Dnpay' . $npayid . '&choe=UTF-8" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>  </div></div>');
 ?>
 
 <script src="https://content.ncoincrypto.com/myalgo.min.js"></script>
@@ -68,25 +98,25 @@
         const accountsSharedByUser = await myAlgoConnect.connect();
 
         const algodClient = new algosdk.Algodv2('', 'https://node.algoexplorerapi.io/', '');
+        console.log(accountsSharedByUser);
         const params = await algodClient.getTransactionParams().do();
 
-        let sender = "RABQ4PRRWJDCMHCCCZ24YTLTT44MI4KFZEMRWGFEYESDRBIKD6QFPNNGBQ";
-        let receiver = "5YOGUR4XWHBVD2TEMG77XULMSQSK6DTQ4HUEHJA5ILA4FSRSMMKZSRWBK4";
-        let note = undefined
+        let receiver = <?php echo("'" . $merchantid . "'") ?>;
+        let txnote = undefined
         let revocationTarget = undefined;
         let closeRemainderTo = undefined;
         //Amount of the asset to transfer
-        amount = <?php echo("$productprice")?>
+        let txamount = <?php echo($productprice*100000) ?>;
 
         // signing and sending "txn" will send "amount" assets from "sender" to "recipient"
         const objtxn = {
             ...params,
             type: 'axfer',
-            from: accountsSharedByUser[0],
+            from: accountsSharedByUser[0]["address"],
             to: receiver,
             assetIndex: 338543684,
-            amount: amount,
-            note: note
+            amount: txamount,
+            note: txnote
         };  
         const signedTxn = await myAlgoConnect.signTransaction(objtxn);
         const response = await algodClient.sendRawTransaction(signedTxn.blob).do();
@@ -95,5 +125,12 @@
     document.getElementById("myalgo").onclick = function()
     {
         asyncCall();
+    }
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        // true for mobile device
+        document.write("mobile device");
+        var newURL = window.location.protocol + "//" + window.location.host + "/" + "mpay.php" + window.location.search;
+        window.location.replace(newURL);
     }
 </script>
