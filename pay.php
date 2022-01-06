@@ -1,6 +1,10 @@
 <html>
     <title>NCoin Pay</title>
     <head>
+        <form style="text-align: center; font-size: 50px;" action="">
+            <label for="email" style="color: #FFFFFF; font-family: Arial, Helvetica, sans-serif;">Email</label>
+            <input type="text" id="email" name="email">
+        </form>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 

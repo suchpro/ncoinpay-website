@@ -6,13 +6,13 @@
     background-color: #393E46;
     margin: auto;
     width: 50%;
-    padding-top: 30px;
+
     font-family: 'Nobile', sans-serif;
+
     text-align: center;
     width: 1000px;
-    height: 800px;
+    height: 900px;
     border-radius: 20px;
-    padding-bottom: 500px;
 }
 
 body{
@@ -20,6 +20,5 @@ body{
 }
 
 .center{
-    padding-top: 200px;
+    
 }
-
