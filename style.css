@@ -13,12 +13,13 @@
     width: 1000px;
     height: 900px;
     border-radius: 20px;
+    padding-top: 30px;
 }
 
 body{
     background-color: #222831;
 }
 
-.center{
-    padding-top: 200px;
+#emailfrm{
+    padding-bottom: 50px;
 }

@@ -1,13 +1,10 @@
 <html>
     <title>NCoin Pay</title>
-    <head>
-        <form style="text-align: center; font-size: 50px;" action="">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <form id="emailfrm" style="text-align: center; font-size: 30px; padding-top: 100px;" action="javascript:void(0);">
             <label for="email" style="color: #FFFFFF; font-family: Arial, Helvetica, sans-serif;">Email</label>
-            <input type="text" id="email" name="email">
-        </form>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-
+            <input style="padding-top: 10px; height: 30px; width: 300px" type="text" id="email" name="email">
+    </form>
     <style>
         .lds-ring {
             display: inline-block;
