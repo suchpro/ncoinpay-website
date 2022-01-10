@@ -87,41 +87,6 @@
         $productprice = json_decode(base64_decode($productpricedict["transaction"]["note"]), true)["price-in-ncoin"];
     }
     echo('<div class="center"><div class="paybox">  <button id="myalgo" class="myalgo">Use MyAlgo</button>  <p>Pay with NCoin</p> <p style="font-size: 20px; font-family: Arial, Helvetica, sans-serif; padding-bottom: 35px;">Send ' . $productprice . ' NCoin to ' . $merchantid . '</p>    <img id="qr" src="https://chart.googleapis.com/chart?chs=450x450&cht=qr&chl=' . 'algorand%3A%2F%2F' . $merchantid . '%3Famount%3D' . $productprice*100000 . '%26asset%3D338543684%26xnote%3Dnpay' . $npayid . '&choe=UTF-8" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>  </div></div>');
-
-
-    require 'D:\Samuel\ncoinpay-website\PHPMailer\SMTP.php';
-    require 'D:\Samuel\ncoinpay-website\PHPMailer\PHPMailer.php';
-
-    function paymentCompleteEmail() {
-
-        //smtp
-        $mail = new PHPMailer\PHPMailer\PHPMailer();
-        $mail->isSMTP();
-        $mail->Host = 'ncoincrypto.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply';
-        $mail->Password = "NPGQ*djv!N1*6mrHJp";
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 465;
-
-        //to&from
-        $mail->setFrom('no-reply@ncoincrypto.com', 'NCoin Pay');
-        $mail->addReplyTo('support@ncoincrypto.com', 'NCoin Support');
-        $mail->addAddress('samuel.cletheroe@gmail.com');
-
-        $mail->Subject = 'Your Payment has been Processed & is now Completed!';
-
-        $mailContent = "Payment Completed!\n\nThanks for using NCoin Pay to complete your purchase. The merchant has received your payment and you should receive the paid product(s) shortly.\n\nFor support, contact support@ncoincrypto.com or the merchant.";
-        $mail->Body = $mailContent;
-
-        if($mail->send()){
-            echo 'Message has been sent';
-        }else{
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
-        }
-    }
-    paymentCompleteEmail();
 ?>
 
 <script src="https://content.ncoincrypto.com/myalgo.min.js"></script>
@@ -161,12 +126,5 @@
     document.getElementById("myalgo").onclick = function()
     {
         asyncCall();
-    }
-
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-        // true for mobile device
-        document.write("mobile device");
-        var newURL = window.location.protocol + "//" + window.location.host + "/" + "mpay.php" + window.location.search;
-        window.location.replace(newURL);
     }
 </script>
