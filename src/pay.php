@@ -18,6 +18,70 @@
 
 <div class="paybox">
        <img class="ncoinlogo" src="http://content.ncoincrypto.com/ncoinlogo.png" alt="noobs logo">
-       <button id="myalgo" class="myalgo">Use MyAlgo</button>
-       <img id="qr" src="https://chart.googleapis.com/chart?chs=350x350&cht=qr&chl=' . 'algorand%3A%2F%2F' . $merchantid . '%3Famount%3D' . $productprice*100000 . '%26asset%3D338543684%26xnote%3Dnpay' . $npayid . '&choe=UTF-8" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+       <p id="sndto"><b>Send <?php echo($productprice) ?> NCoin to <br><?php echo($merchantid) ?><br> to complete this purchase.</b></p>
+       <button id="myalgo" class="myalgo">Deposit with MyAlgo Connect</button>
+       <div class="divider" style="height:25px"></div>
+       <button id="algowallet" class="algowallet">Deposit with Algorand Mobile Wallet</button>
+       <img id="qr" src="https://chart.googleapis.com/chart?chs=350x350&cht=qr&chl=algorand%3A%2F%2F<?php echo($merchantid)?>%3Famount%3D<?php echo($productprice*100000)?>%26asset%3D338543684%26xnote%3Dnpay<?php echo($npayid)?>&choe=UTF-8" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div>
 </div>
+
+<script src="https://content.ncoincrypto.com/myalgo.min.js"></script>
+<script src="https://unpkg.com/algosdk@1.13.0-beta.2/dist/browser/algosdk.min.js" integrity="sha384-ArIfXzQ4ARpkRJIn6EKgtqbJaPXhEEvNoguSPToHMg2VNl2rNc6QuuOTyDX7Krps" crossorigin="anonymous"></script>
+
+<script>
+    async function asyncCall() {
+        
+        const myAlgoConnect = new MyAlgoConnect();
+        const accountsSharedByUser = await myAlgoConnect.connect();
+
+        const algodClient = new algosdk.Algodv2('', 'https://node.algoexplorerapi.io/', '');
+        console.log(accountsSharedByUser);
+
+        const params = await algodClient.getTransactionParams().do();
+
+        let receiver = <?php echo("'" . $merchantid . "'") ?>;
+        let txnote = undefined
+        let revocationTarget = undefined;
+        let closeRemainderTo = undefined;
+        //Amount of the asset to transfer
+        let txamount = <?php echo($productprice*100000) ?>;
+
+        // signing and sending "txn" will send "amount" assets from "sender" to "recipient"
+        const objtxn = {
+            ...params,
+            type: 'axfer',
+            from: accountsSharedByUser[0]["address"],
+            to: receiver,
+            assetIndex: 338543684,
+            amount: txamount,
+            note: txnote
+        };  
+        const signedTxn = await myAlgoConnect.signTransaction(objtxn);
+        const response = await algodClient.sendRawTransaction(signedTxn.blob).do();
+    }
+
+    document.getElementById("myalgo").onclick = function()
+    {
+        asyncCall();
+    }
+
+    document.getElementById("algowallet").onclick = function()
+    {
+        window.open("algorand://<?php echo($merchantid) ?>" + "?amount=<?php echo($productprice * 100000) ?>" + "&asset=338543684&xnote=npay<?php echo($npayid) ?>");
+    }
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+        // true for mobile device
+        var myobj = document.getElementById("qr");
+        myobj.remove();
+
+        var myobj2 = document.getElementById("sndto");
+        myobj2.remove();
+
+        document.getElementById("myalgo").style.marginTop = "150px";
+    }else{
+        // false for not mobile device
+        var myobj = document.getElementById("algowallet");
+        myobj.remove();
+    }
+</script>
