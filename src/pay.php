@@ -18,10 +18,14 @@
 
 <div class="paybox">
        <img class="ncoinlogo" src="http://content.ncoincrypto.com/ncoinlogo.png" alt="noobs logo">
+       <p class="mobilesendinginfo" style="text-align:center;color:white;font-family:arial;" id="amountmobile">Amount to send: <?php echo($productprice) ?></p>
+       <button id="copy" onclick="copytext()" style="margin:0 auto;display:block;">Copy Address</button>
        <p id="sndto"><b>Send <?php echo($productprice) ?> NCoin to <br><?php echo($merchantid) ?><br> to complete this purchase.</b></p>
        <button id="myalgo" class="myalgo">Deposit with MyAlgo Connect</button>
-       <div class="divider" style="height:25px"></div>
+       <div class="divider" style="height: 50px"></div>
+
        <button id="algowallet" class="algowallet">Deposit with Algorand Mobile Wallet</button>
+
        <img id="qr" src="https://chart.googleapis.com/chart?chs=350x350&cht=qr&chl=algorand%3A%2F%2F<?php echo($merchantid)?>%3Famount%3D<?php echo($productprice*100000)?>%26asset%3D338543684%26xnote%3Dnpay<?php echo($npayid)?>&choe=UTF-8" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div>
 </div>
 
@@ -40,7 +44,7 @@
         const params = await algodClient.getTransactionParams().do();
 
         let receiver = <?php echo("'" . $merchantid . "'") ?>;
-        let txnote = undefined
+        let txnote = "npay<?php echo($npayid) ?>"
         let revocationTarget = undefined;
         let closeRemainderTo = undefined;
         //Amount of the asset to transfer
@@ -78,10 +82,22 @@
         var myobj2 = document.getElementById("sndto");
         myobj2.remove();
 
-        document.getElementById("myalgo").style.marginTop = "150px";
+        document.getElementById("myalgo").style.marginTop = "100px";
     }else{
         // false for not mobile device
         var myobj = document.getElementById("algowallet");
+        var myobj2 = document.getElementById("copy");
+        var myobj3 = document.getElementById("amountmobile");
         myobj.remove();
+        myobj2.remove();
+        myobj3.remove();
+    }
+
+    function copytext() {
+        /* Get the text field */
+        var copyText = "<?php echo($merchantid) ?>"
+
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText);
     }
 </script>
