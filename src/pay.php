@@ -20,7 +20,6 @@
        <img class="ncoinlogo" src="http://content.ncoincrypto.com/ncoinlogo.png" alt="noobs logo">
        <p class="mobilesendinginfo" style="text-align:center;color:white;font-family:arial;" id="amountmobile">Amount to send: <?php echo($productprice) ?></p>
        <button id="copy" onclick="copytext()" style="margin:0 auto;display:block;">Copy Address</button>
-       <p id="sndto"><b>Send <?php echo($productprice) ?> NCoin to <br><?php echo($merchantid) ?><br> to complete this purchase.</b></p>
        <button id="myalgo" class="myalgo">Deposit with MyAlgo Connect</button>
        <div class="divider" style="height: 50px"></div>
 
