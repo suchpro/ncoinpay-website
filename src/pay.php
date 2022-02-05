@@ -11,7 +11,7 @@
         $productprice = json_decode(base64_decode($productpricedict["transaction"]["note"]), true)["price-in-ncoin"];
     }
 
-    $checkfortx = json_decode(file_get_contents("https://algoindexer.algoexplorerapi.io/v2/accounts/" . $merchantid . "/transactions?limit=0&note-prefix=" . urlencode(base64_encode($npayid)) . "&asset-id=338543684&currency-greater-than=" . $productprice . "&currency-less-than=" . intval($productprice) + 1), true);
+    $checkfortx = json_decode(file_get_contents("https://algoindexer.algoexplorerapi.io/v2/accounts/" . $merchantid . "/transactions?limit=0&note-prefix=" . urlencode(base64_encode("npay" . $npayid)) . "&asset-id=338543684&currency-greater-than=" . ($productprice * 100000 - 1)), true);
 
     if ($checkfortx["transactions"][0] == true){
         echo("yes");
@@ -49,6 +49,7 @@
 
         let receiver = <?php echo("'" . $merchantid . "'") ?>;
         let txnote = "npay<?php echo($npayid) ?>"
+        console.log(txnote)
         let revocationTarget = undefined;
         let closeRemainderTo = undefined;
         //Amount of the asset to transfer
@@ -62,7 +63,7 @@
             to: receiver,
             assetIndex: 338543684,
             amount: txamount,
-            note: txnote
+            note: window.btoa(txnote)
         };  
         const signedTxn = await myAlgoConnect.signTransaction(objtxn);
         const response = await algodClient.sendRawTransaction(signedTxn.blob).do();
