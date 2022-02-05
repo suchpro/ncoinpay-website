@@ -10,13 +10,18 @@
     {
         $productprice = json_decode(base64_decode($productpricedict["transaction"]["note"]), true)["price-in-ncoin"];
     }
-    echo('');
+
+    $checkfortx = json_decode(file_get_contents("https://algoindexer.algoexplorerapi.io/v2/accounts/" . $merchantid . "/transactions?limit=0&note-prefix=" . urlencode(base64_encode($npayid)) . "&asset-id=338543684&currency-greater-than=" . $productprice . "&currency-less-than=" . intval($productprice) + 1), true);
+
+    if ($checkfortx["transactions"][0] == true){
+        echo("yes");
+    }
 ?>
 
 <link rel="stylesheet" href="style.css">
 <title>Pay with NCoin</title>
 
-<div class="paybox">
+<div style="text-align:center" class="paybox">
        <img class="ncoinlogo" src="http://content.ncoincrypto.com/ncoinlogo.png" alt="noobs logo">
        <p class="mobilesendinginfo" style="text-align:center;color:white;font-family:arial;" id="amountmobile">Amount to send: <?php echo($productprice) ?></p>
        <button id="copy" onclick="copytext()" style="margin:0 auto;display:block;">Copy Address</button>
@@ -24,7 +29,7 @@
        <div class="divider" style="height: 50px"></div>
 
        <button id="algowallet" class="algowallet">Deposit with Algorand Mobile Wallet</button>
-
+       <button onclick="refreshStatus()" id="refresh" style="margin-bottom: 20px">Refresh</button>
        <img id="qr" src="https://chart.googleapis.com/chart?chs=350x350&cht=qr&chl=algorand%3A%2F%2F<?php echo($merchantid)?>%3Famount%3D<?php echo($productprice*100000)?>%26asset%3D338543684%26xnote%3Dnpay<?php echo($npayid)?>&choe=UTF-8" title="Payment QR"/>     <div class="lds-ring"><div></div><div></div>
 </div>
 
@@ -82,7 +87,8 @@
         myobj2.remove();
 
         document.getElementById("myalgo").style.marginTop = "100px";
-    }else{
+        }
+        else{
         // false for not mobile device
         var myobj = document.getElementById("algowallet");
         var myobj2 = document.getElementById("copy");
@@ -98,5 +104,9 @@
 
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(copyText);
+    }
+
+    function refreshStatus(){
+        window.location.replace(window.location.href);
     }
 </script>
