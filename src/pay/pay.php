@@ -11,20 +11,21 @@
         $productprice = json_decode(base64_decode($productpricedict["transaction"]["note"]), true)["price-in-ncoin"];
     }
 
-    $checkfortx = json_decode(file_get_contents("https://algoindexer.algoexplorerapi.io/v2/accounts/" . $merchantid . "/transactions?limit=0&note-prefix=" . urlencode(base64_encode("npay" . $npayid)) . "&asset-id=338543684&currency-greater-than=" . ($productprice * 100000 - 1)), true);
+    $checkfortx = json_decode(file_get_contents("https://algoindexer.algoexplorerapi.io/v2/accounts/" . $merchantid . "/transactions?limit=0&note-prefix=" . urlencode(base64_encode("npay" . $npayid)) . "&asset-id=338543684&currency-greater-than=" . ($productprice * 100000 - 1) . "&currency-less-than=" . ($productprice * 100000 + 1)), true);
 
-    if ($checkfortx["transactions"][0] == true){
-        echo("yes");
+    if (array_key_exists(0, $checkfortx["transactions"])){
+        echo("<script>history.back()</script>");
     }
 ?>
 
 <link rel="stylesheet" href="style.css">
 <title>Pay with NCoin</title>
+<img class="ncoinlogo1" id="ncoinlogo1" src="http://content.ncoincrypto.com/ncoinlogo.png" alt="noobs logo">
 
-<div style="text-align:center" class="paybox">
+<div style="text-align:center" id="paybox" class="paybox">
        <img class="ncoinlogo" src="http://content.ncoincrypto.com/ncoinlogo.png" alt="noobs logo">
        <p class="mobilesendinginfo" style="text-align:center;color:white;font-family:arial;" id="amountmobile">Amount to send: <?php echo($productprice) ?></p>
-       <button id="copy" onclick="copytext()" style="margin:0 auto;display:block;">Copy Address</button>
+       <button id="copy" onclick="copytext()" style="margin:0 auto;display:block; border:none;">Copy Address</button>
        <button id="myalgo" class="myalgo">Deposit with MyAlgo Connect</button>
        <div class="divider" style="height: 50px"></div>
 
@@ -36,7 +37,16 @@
 <script src="https://content.ncoincrypto.com/myalgo.min.js"></script>
 <script src="https://unpkg.com/algosdk@1.13.0-beta.2/dist/browser/algosdk.min.js" integrity="sha384-ArIfXzQ4ARpkRJIn6EKgtqbJaPXhEEvNoguSPToHMg2VNl2rNc6QuuOTyDX7Krps" crossorigin="anonymous"></script>
 
-<script>
+<script id="mainjs">
+    function showorhide() {
+        var x = document.getElementById("paybox");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
     async function asyncCall() {
         
         const myAlgoConnect = new MyAlgoConnect();
@@ -84,9 +94,6 @@
         var myobj = document.getElementById("qr");
         myobj.remove();
 
-        var myobj2 = document.getElementById("sndto");
-        myobj2.remove();
-
         document.getElementById("myalgo").style.marginTop = "100px";
         }
         else{
@@ -109,5 +116,10 @@
 
     function refreshStatus(){
         window.location.replace(window.location.href);
+    }
+
+    window.onload = function(){
+        showorhide()
+        setTimeout(() => {document.getElementById("ncoinlogo1").style.display = "none"; showorhide()}, 2000);
     }
 </script>

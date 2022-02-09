@@ -1,0 +1,87 @@
+<title>NCoin Pay Merchant Panel</title>
+<h1 id="toptitle">NCoin Pay Management</h1>
+<div class="myalgocontainer">
+    <button onclick="myalgologin()" id="myalgologin">Log-in with MyAlgo to create a product</button>
+</div>
+
+<div class="newproductdiv">
+    <button onclick="createproduct()" id="newproduct">Generate a new NCoin Pay ProductID</button>
+    <input type="number" name="Price" placeholder="Price in NCoin" id="ncprice">
+</div>
+<p id="displayproductid"></p>
+
+<script src="http://content.ncoincrypto.com/myalgo.min.js"></script>
+
+<style>
+    #toptitle{
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 50px;
+    }
+
+    .myalgocontainer{  
+        display: flex;
+        justify-content: center;
+    }
+    #myalgologin{
+        width: 550px;
+        height: 60px;
+        border: none;
+        border-radius: 15px;
+        background-color: black;
+        color: white;
+        font-size: 20px;
+    }
+    .newproductdiv{  
+        margin-top: 50px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+    #newproduct{
+        width: 550px;
+        height: 60px;
+        border: none;
+        border-radius: 15px;
+        background-color: black;
+        color: white;
+        font-size: 20px;
+    }
+</style>
+
+
+<script
+  src="https://cdn.jsdelivr.net/npm/algosdk@1.13.1/dist/browser/algosdk.min.js"
+  integrity="sha384-0BSEzBpLxqFWYBI+sOGhv3W91/wPf+jFwCiuXNrC52XZav2qb3Rz+pfq3AFI0CrL"
+  crossorigin="anonymous"
+></script>
+
+<script>
+    var address = null;
+    async function myalgologin(){
+        const myAlgoWallet = new MyAlgoConnect();
+        const accounts = await myAlgoWallet.connect();
+        address = accounts[0]["address"];
+        document.getElementById("myalgologin").innerHTML = accounts[0]["address"];
+    }
+
+    async function createproduct(){
+            const algodClient = new algosdk.Algodv2("",'https://node.algoexplorerapi.io/', '');
+            const params = await algodClient.getTransactionParams().do();
+
+            const txn = {
+                ...params,
+                type: "pay",
+                from: address,
+                to: address,
+                amount: 0,
+                note: btoa('{"price-in-ncoin": '.concat(document.getElementById("ncprice").value).concat("}"))
+            };
+
+            const myAlgoConnect = new MyAlgoConnect();
+            const signedTxn = await myAlgoConnect.signTransaction(txn);
+            const txId = await algodClient.sendRawTransaction(signedTxn.blob).do()
+            console.log(txId)
+            document.getElementById("displayproductid").innerHTML = "Product ID is ".concat(txId["txId"]);
+    }
+</script>
